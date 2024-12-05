@@ -1,5 +1,5 @@
 import AutoGUI from '@silver-zepp/autogui'
-import { HeartRate, Time, Vibrator, VIBRATOR_SCENE_SHORT_LIGHT, VIBRATOR_SCENE_SHORT_STRONG } from '@zos/sensor'
+import { HeartRate, Time, Vibrator, VIBRATOR_SCENE_DURATION, VIBRATOR_SCENE_DURATION_LONG } from '@zos/sensor'
 import { getProfile } from '@zos/user'
 import { pausePalmScreenOff, pauseDropWristScreenOff, setWakeUpRelaunch } from '@zos/display'
 
@@ -66,18 +66,20 @@ Page({
       timeWidget.update({ text: `${mins}:${seconds}` })
 
       const vibrator = new Vibrator()
-      if (currTime - lastVibrate > 1 * 500) {
+      if (currTime - lastVibrate > 1 * 5000) {
         if (lastHr > maxhr) {
-          vibrator.setMode(VIBRATOR_SCENE_SHORT_STRONG)
+          vibrator.setMode(VIBRATOR_SCENE_DURATION_LONG)
+          console.log('max vibration')
           vibrator.start()
           lastVibrate = currTime
         } else if (lastHr < minhr) {
           lastVibrate = currTime
-          vibrator.setMode(VIBRATOR_SCENE_SHORT_LIGHT)
+          vibrator.setMode(VIBRATOR_SCENE_STRONG_REMINDER)
+          console.log('min vibration')
           vibrator.start()
         }
       }
-    }, 100)
+    }, 200)
 
     heart.onCurrentChange(() => {
       updateHr(heart.getCurrent())
