@@ -1,0 +1,51 @@
+{
+  "configVersion": "v2",
+  "app": {
+    "appId": 26692,
+    "appName": "FatBurnZone",
+    "appType": "app",
+    "version": {
+      "code": 1,
+      "name": "1.0.0"
+    },
+    "icon": "icon.png",
+    "vender": "zepp",
+    "description": "App to focus on Fat burn zone during excercise"
+  },
+  "permissions": [
+    "data:os.device.info",
+    "data:user.info",
+    "data:user.hd.heart_rate"
+  ],
+  "runtime": {
+    "apiVersion": {
+      "compatible": "2.1.0",
+      "target": "2.1.0",
+      "minVersion": "2.1.0"
+    }
+  },
+  "targets": {
+    "454x454-trex-2": {
+      "module": {
+        "page": {
+          "pages": [
+            "page/index"
+          ]
+        }
+      },
+      "platforms": [
+        {
+          "name": "trex2",
+          "deviceSource": 419
+        }
+      ],
+      "designWidth": 454
+    }
+  },
+  "i18n": {
+    "en-US": {
+      "appName": "FatBurnZone"
+    }
+  },
+  "defaultLanguage": "en-US"
+}
