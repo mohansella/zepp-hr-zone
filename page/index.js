@@ -1,7 +1,7 @@
 import AutoGUI from '@silver-zepp/autogui'
 import { HeartRate, Time, Vibrator, VIBRATOR_SCENE_DURATION, VIBRATOR_SCENE_DURATION_LONG } from '@zos/sensor'
 import { getProfile } from '@zos/user'
-import { pausePalmScreenOff, pauseDropWristScreenOff, setWakeUpRelaunch } from '@zos/display'
+import { pausePalmScreenOff, pauseDropWristScreenOff, setWakeUpRelaunch, setPageBrightTime } from '@zos/display'
 
 const COLOR_BLACK = 0x000000
 const COLOR_WARMUP = 0x4A90E2
@@ -10,10 +10,9 @@ const COLOR_ANEAROBIC = 0xF5A623
 
 Page({
   build() {
-    pauseDropWristScreenOff()
-    pausePalmScreenOff()
+    pauseDropWristScreenOff({ duration: 0 })
+    pausePalmScreenOff({ duration: 0 })
     setWakeUpRelaunch({ relaunch: true })
-
 
     const gui = new AutoGUI()
     const time = new Time()
