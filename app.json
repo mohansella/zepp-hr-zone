@@ -2,7 +2,7 @@
   "configVersion": "v2",
   "app": {
     "appId": 26692,
-    "appName": "FatBurnZone",
+    "appName": "Guided HR Zone",
     "appType": "app",
     "version": {
       "code": 1,
@@ -44,7 +44,7 @@
   },
   "i18n": {
     "en-US": {
-      "appName": "FatBurnZone"
+      "appName": "Guided HR Zone"
     }
   },
   "defaultLanguage": "en-US"
