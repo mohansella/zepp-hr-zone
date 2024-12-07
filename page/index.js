@@ -2,11 +2,7 @@ import AutoGUI from '@silver-zepp/autogui'
 import { HeartRate, Time, Vibrator, VIBRATOR_SCENE_DURATION_LONG } from '@zos/sensor'
 import { getProfile } from '@zos/user'
 import { pausePalmScreenOff, pauseDropWristScreenOff, setWakeUpRelaunch } from '@zos/display'
-
-const COLOR_BLACK = 0x000000
-const COLOR_WARMUP = 0x4A90E2
-const COLOR_FATBURN = 0x7ED321
-const COLOR_ANEAROBIC = 0xF5A623
+import HR_ZONES_COLORS from '../utils/constants'
 
 Page({
   build() {
@@ -39,16 +35,16 @@ Page({
       hrWidget.update({ text: currHr.toString() })
       console.log(`currHr: ${currHr}`)
       if (currHr > maxhr) {
-        tRect.update({ color: COLOR_ANEAROBIC })
-        bRect.update({ color: COLOR_ANEAROBIC })
+        tRect.update({ color: HR_ZONES_COLORS.CARDIO})
+        bRect.update({ color: HR_ZONES_COLORS.CARDIO})
         console.log('COLOR_ANEAROBIC')
       } else if (currHr < minhr) {
-        tRect.update({ color: COLOR_WARMUP })
-        bRect.update({ color: COLOR_WARMUP })
+        tRect.update({ color: HR_ZONES_COLORS.WARM_UP})
+        bRect.update({ color: HR_ZONES_COLORS.WARM_UP})
         console.log('COLOR_WARMUP')
       } else {
-        tRect.update({ color: COLOR_FATBURN })
-        bRect.update({ color: COLOR_FATBURN })
+        tRect.update({ color: HR_ZONES_COLORS.FAT_BURNING})
+        bRect.update({ color: HR_ZONES_COLORS.FAT_BURNING})
         console.log('COLOR_FATBURN')
         lastVibrate = 0
       }
