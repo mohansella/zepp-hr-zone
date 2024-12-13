@@ -1,6 +1,6 @@
 import * as UI from '@zos/ui'
 import { px } from '@zos/utils'
-import { ZoneManager } from '../utils/zones'
+import { ZoneManager, Zones } from '../utils/zones'
 import { CommonUtils } from '../utils/common'
 
 const FS_TITLE = 48
@@ -17,11 +17,13 @@ export class IndexPageUI {
 
   constructor(heartRate, calories) {
     this.zoneManager = new ZoneManager(heartRate)
+    this.targetZone = this.zoneManager.getZone(Zones.FatBurn)
+    console.log(`targetZone:${JSON.stringify(this.targetZone)}`)
     this.initialCalories = calories
     this.initialTime = CommonUtils.getEpochMillis()
     this.heartRateData = [
-      { time: CommonUtils.getEpochMillis(), hr: heartRate },
-      { time: 0, hr: heartRate}
+      { time: 0, hr: heartRate},
+      { time: CommonUtils.getEpochMillis(), hr: heartRate }
     ]
 
     this.initBackground()
@@ -42,12 +44,12 @@ export class IndexPageUI {
     const lineDataList = []
     const lowHeight = (this.graphHeight - this.graphZoneHeight) / 2
     const highHeight = (this.graphHeight - this.graphZoneHeight) / 2
-    const zoneMin = this.zoneManager.getCurrZoneMin()
-    const zoneMax = this.zoneManager.getCurrZoneMax()
+    const zoneMin = this.targetZone.minHR
+    const zoneMax = this.targetZone.maxHR
     for(var i = 0; i < this.heartRateData.length; i++) {
       const data = this.heartRateData[i]
       const timeDelta = millis - data.time
-      let x = timeDelta * this.graphWidth / 1000 / 30
+      let x = timeDelta * this.graphWidth / 1000 / 60
       if(x > this.graphWidth) {
         x = this.graphWidth
       }
@@ -63,6 +65,7 @@ export class IndexPageUI {
         y = (y - zoneMax) / (maxHR - zoneMax) //0-1
         y = lowHeight + this.graphZoneHeight + (y * highHeight)
       }
+      y = this.graphHeight - y //inverse due to y from top
       lineDataList.push({x:x, y:y})
     }
     console.log(`${JSON.stringify(lineDataList)}`)
@@ -87,7 +90,12 @@ export class IndexPageUI {
 
   setHeartRate(heartRate) {
     this.zoneManager.update(heartRate)
-    this.background.setProperty(UI.prop.COLOR, this.zoneManager.getCurrBackgroundColor())
+    this.heartRateData.push({
+      time: CommonUtils.getEpochMillis(),
+      hr: heartRate
+    })
+    this.updateGraph()
+    this.background.setProperty(UI.prop.COLOR, this.zoneManager.getCurrZone().color)
     this.heartRate.setProperty(UI.prop.TEXT, `${heartRate}`)
   }
 
@@ -101,7 +109,7 @@ export class IndexPageUI {
       y: px(0),
       w: PX_FULL,
       h: PX_FULL,
-      color: this.zoneManager.getCurrBackgroundColor()
+      color: this.zoneManager.getCurrZone().color
     })
   }
 
@@ -168,7 +176,7 @@ export class IndexPageUI {
       align_h: UI.align.CENTER_H,
       align_v: UI.align.CENTER_V,
       text_size: FS_CURSOR,
-      text: this.zoneManager.getCurrZoneMax(),
+      text: this.targetZone.maxHR,
       color: grayColor
     })
     //bottom gray text
@@ -180,7 +188,7 @@ export class IndexPageUI {
       align_h: UI.align.CENTER_H,
       align_v: UI.align.CENTER_V,
       text_size: FS_CURSOR,
-      text: this.zoneManager.getCurrZoneMin(),
+      text: this.targetZone.minHR,
       color: grayColor
     })
     //left cursor line
@@ -263,7 +271,7 @@ export class IndexPageUI {
       align_v: UI.align.CENTER_V,
       text_size: FS_TITLE,
       text: '',
-      color: this.zoneManager.getCurrFontColor()
+      color: 0
     })
     UI.createWidget(UI.widget.TEXT, {
       x: PX_LEFTX,
@@ -274,7 +282,7 @@ export class IndexPageUI {
       align_v: UI.align.CENTER_V,
       text_size: FS_SUBTITLE,
       text: 'Duration',
-      color: this.zoneManager.getCurrFontColor()
+      color: 0
     })
   }
 
@@ -289,7 +297,7 @@ export class IndexPageUI {
       align_v: UI.align.CENTER_V,
       text_size: FS_TITLE,
       text: 0,
-      color: this.zoneManager.getCurrFontColor()
+      color: 0
     })
     UI.createWidget(UI.widget.TEXT, {
       x: PX_RIGHTX,
@@ -300,7 +308,7 @@ export class IndexPageUI {
       align_v: UI.align.CENTER_V,
       text_size: FS_SUBTITLE,
       text: 'Calories',
-      color: this.zoneManager.getCurrFontColor()
+      color: 0
     })
   }
 
@@ -314,7 +322,7 @@ export class IndexPageUI {
       align_v: UI.align.CENTER_V,
       text_size: 80,
       text: heartRate,
-      color: this.zoneManager.getCurrFontColor()
+      color: 0
     })
     UI.createWidget(UI.widget.TEXT, {
       x: PX_LEFTX,
@@ -324,7 +332,7 @@ export class IndexPageUI {
       align_h: UI.align.CENTER_H,
       align_v: UI.align.CENTER_V,
       text: 'Heart Rate',
-      color: this.zoneManager.getCurrFontColor()
+      color: 0
     })
   }
 
@@ -338,7 +346,7 @@ export class IndexPageUI {
       align_v: UI.align.CENTER_V,
       text_size: FS_TITLE,
       text: '3545',
-      color: this.zoneManager.getCurrFontColor()
+      color: 0
     })
     UI.createWidget(UI.widget.TEXT, {
       x: PX_LEFTX,
@@ -349,7 +357,7 @@ export class IndexPageUI {
       align_v: UI.align.CENTER_V,
       text_size: FS_SUBTITLE,
       text: 'Steps',
-      color: this.zoneManager.getCurrFontColor()
+      color: 0
     })
   }
 
@@ -363,7 +371,7 @@ export class IndexPageUI {
       align_v: UI.align.CENTER_V,
       text_size: FS_TITLE,
       text: '1.25 k',
-      color: this.zoneManager.getCurrFontColor()
+      color: 0
     })
     UI.createWidget(UI.widget.TEXT, {
       x: PX_RIGHTX,
@@ -374,7 +382,7 @@ export class IndexPageUI {
       align_v: UI.align.CENTER_V,
       text_size: FS_SUBTITLE,
       text: 'Distance',
-      color: this.zoneManager.getCurrFontColor()
+      color: 0
     })
   }
 
