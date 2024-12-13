@@ -29,11 +29,11 @@ const ZonePercent = {
   zone5: 100
 }
 
-export class ZoneRange {
+export class ZoneManager {
 
   constructor(heartRate) {
-    this.zoneId = 0
-    this.zones = []
+    this.currZoneId = 0
+    this.allZones = []
 
     const profile = getProfile()
     const age = profile.age || 30
@@ -42,7 +42,7 @@ export class ZoneRange {
     var zoneId = 0
     Zones.forEach((zone) => {
       var zonePercent = ZonePercent[zone]
-      this.zones.push({
+      this.allZones.push({
         id: zoneId++,
         zone: zone,
         name: ZoneNames[zone],
@@ -52,25 +52,54 @@ export class ZoneRange {
       })
       prevZone = zonePercent
     })
+    this.maxHeartRate = maxHeartRate
 
-    this.updateZone(heartRate)
+    this.update(heartRate)
   }
 
-  updateZone(heartRate) {
-    console.log(JSON.stringify(this.zones))
-    var zone = this.zones.find((zone) => {
+  update(heartRate) {
+    var zone = this.allZones.find((zone) => {
       return heartRate > zone.min && heartRate < zone.max
-    }) || zones[zones.length - 1]
-    this.zoneId = zone.id
-    console.log(`hr:${heartRate} zoneId:${this.zoneId} zone:${JSON.stringify(zone)}`)
+    }) || this.allZones[this.allZones.length - 1]
+    this.currZoneId = zone.id
+    console.log(`hr:${heartRate} zoneId:${this.currZoneId} zone:${JSON.stringify(zone)}`)
   }
 
-  getFontColor() {
-    return 0x000000
+  getCurrFontColor() {
+    return 0
   }
 
-  getBackgroundColor() {
-    return this.zones[this.zoneId].color
+  getCurrBackgroundColor() {
+    //return 0xFFFFFF
+    return this.allZones[this.currZoneId].color
+  }
+
+  getCurrZoneMin() {
+    return this.allZones[this.currZoneId].min
+  }
+
+  getCurrZoneMax() {
+    return this.allZones[this.currZoneId].max
+  }
+
+  getZone(zoneName) {
+    return this.allZones.find((zone) => {
+      return zone.name == zoneName
+    })
+  }
+
+  getZoneMin(zoneName) {
+    const zone = getZone(zoneName)
+    return zone && zone.min
+  }
+
+  getZoneMax(zoneName) {
+    const zone = getZone(zoneName)
+    return zone && zone.max
+  }
+
+  getMaxHeartRate() {
+    return this.maxHeartRate
   }
 
 }
