@@ -16,7 +16,9 @@
     "data:os.device.info",
     "data:user.info",
     "data:user.hd.heart_rate",
-    "data:user.hd.calorie"
+    "data:user.hd.calorie",
+    "data:user.hd.step",
+    "data:user.hd.distance"
   ],
   "runtime": {
     "apiVersion": {

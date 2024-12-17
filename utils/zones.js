@@ -57,10 +57,11 @@ export class ZoneManager {
 
   update(heartRate) {
     var zone = this.allZones.find((zone) => {
-      return heartRate > zone.minHR && heartRate < zone.maxHR
+      return heartRate > (zone.minHR || 0) && heartRate < zone.maxHR
     }) || this.allZones[this.allZones.length - 1]
     this.currZoneId = zone.id
-    console.log(`ZoneManager.update() hr:${heartRate} zoneId:${this.currZoneId} zone:${JSON.stringify(zone)}`)
+    console.log(`ZoneManager.update() hr:${heartRate} 
+        zoneId:${this.currZoneId} zone:${JSON.stringify(zone)}`)
   }
 
   getCurrZone() {
