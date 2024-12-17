@@ -25,6 +25,9 @@ Page({
       const currHeartRate = heartSensor.getCurrent()
       ui.setHeartRate(currHeartRate)
     })
+    setInterval(() => {
+      ui.updateGraph()
+    }, 1000)
 
     //calories
     calorieSensor.onChange(() => {

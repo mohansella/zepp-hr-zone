@@ -27,8 +27,8 @@ export class IndexPageUI {
     this.initialSteps = steps
     this.initialDistance = distance
     this.heartRateData = [
+      { time: CommonUtils.getEpochMillis(), hr: heartRate },
       { time: 0, hr: heartRate },
-      { time: CommonUtils.getEpochMillis(), hr: heartRate }
     ]
 
     this.initBackground()
@@ -57,6 +57,7 @@ export class IndexPageUI {
       let x = timeDelta * this.graphWidth / 1000 / 60
       if (x > this.graphWidth) {
         x = this.graphWidth
+        this.heartRateData.length = i + 1
       }
       if (data.hr < zoneMin) {
         y = data.hr / zoneMin //0-1
@@ -73,8 +74,11 @@ export class IndexPageUI {
       y = this.graphHeight - y //inverse due to y from top
       lineDataList.push({ x: x, y: y })
     }
-    console.log(`${JSON.stringify(lineDataList)}`)
     this.polyline.clear()
+    lineDataList.unshift({
+      x: 0,
+      y: lineDataList[0].y,
+    })
     this.polyline.addLine({
       data: lineDataList,
       count: lineDataList.length
@@ -95,7 +99,7 @@ export class IndexPageUI {
 
   setHeartRate(heartRate) {
     this.zoneManager.update(heartRate)
-    this.heartRateData.push({
+    this.heartRateData.unshift({
       time: CommonUtils.getEpochMillis(),
       hr: heartRate
     })
