@@ -306,7 +306,6 @@ export class IndexPageUI {
   }
 
   initCalories() {
-    this.initialCalories = calories
     this.calories = UI.createWidget(UI.widget.TEXT, {
       x: PX_RIGHTX,
       y: px(70),
